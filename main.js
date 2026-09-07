@@ -56,8 +56,12 @@ app.whenReady().then(() => {
     return false;
   });
   ipcMain.on('restart-and-update', () => {
-    if (updateReady) autoUpdater.quitAndInstall(false, true);
-    else app.quit();
+    if (!updateReady) return app.quit();
+    // Cerrar la ventana antes de iniciar NSIS evita que Electron mantenga
+    // archivos bloqueados y que el instalador quede pendiente al reiniciar.
+    autoUpdater.autoInstallOnAppQuit = false;
+    if (mainWindow && !mainWindow.isDestroyed()) mainWindow.hide();
+    setTimeout(() => autoUpdater.quitAndInstall(false, true), 250);
   });
   createWindow();
   configureAutoUpdates();

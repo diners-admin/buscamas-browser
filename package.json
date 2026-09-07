@@ -1,6 +1,6 @@
 {
   "name": "buscamas-browser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Navegador Windows de Buscamas",
   "main": "main.js",
   "scripts": { "start": "electron .", "dev": "electron .", "dist": "electron-builder --win nsis" },
