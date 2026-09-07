@@ -1,0 +1,21 @@
+{
+  "name": "buscamas-browser",
+  "version": "0.1.0",
+  "description": "Navegador Windows de Buscamas",
+  "main": "main.js",
+  "scripts": { "start": "electron .", "dev": "electron .", "dist": "electron-builder --win nsis" },
+  "keywords": ["buscamas", "browser", "windows"],
+  "author": "Buscamas",
+  "license": "MIT",
+  "dependencies": { "electron-updater": "^6.3.9" },
+  "devDependencies": { "electron": "^31.0.0", "electron-builder": "^24.13.3" },
+  "build": {
+    "appId": "es.buscamas.browser",
+    "productName": "Buscamas",
+    "directories": { "output": "dist" },
+    "files": ["**/*", "!dist/**"],
+    "win": { "target": "nsis", "artifactName": "Buscamas-Setup-${version}.${ext}" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true, "createStartMenuShortcut": true },
+    "publish": { "provider": "github", "owner": "diners-admin", "repo": "buscamas-browser", "private": true }
+  }
+}
