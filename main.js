@@ -4,7 +4,6 @@ const path = require('path');
 
 let mainWindow;
 let updateReady = false;
-let installingUpdate = false;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -58,16 +57,14 @@ app.whenReady().then(() => {
   });
   ipcMain.on('restart-and-update', () => {
     if (!updateReady) return app.quit();
-    installingUpdate = true;
-    autoUpdater.autoInstallOnAppQuit = false;
-    if (mainWindow && !mainWindow.isDestroyed()) mainWindow.close();
-    // quitAndInstall necesita ejecutarse mientras el proceso sigue vivo;
-    // window-all-closed queda bloqueado durante esta operación.
-    setTimeout(() => autoUpdater.quitAndInstall(false, true), 500);
+    // Este método cierra Electron y lanza el instalador NSIS descargado.
+    // No se debe cerrar la ventana manualmente antes: electron-updater
+    // necesita controlar el ciclo de salida para ejecutar el instalador.
+    setImmediate(() => autoUpdater.quitAndInstall(false, true));
   });
   createWindow();
   configureAutoUpdates();
   app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
 });
 
-app.on('window-all-closed', () => { if (process.platform !== 'darwin' && !installingUpdate) app.quit(); });
+app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
